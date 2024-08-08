@@ -84,7 +84,7 @@ Before starting, ensure you have the following installed:
      ```sql
      -- Create Authors Table
      CREATE TABLE Authors (
-         authorId SERIAL PRIMARY KEY,
+         author_Id SERIAL PRIMARY KEY,
          name VARCHAR(255) NOT NULL,
          about TEXT,
          date_of_birth DATE
@@ -99,16 +99,16 @@ Before starting, ensure you have the following installed:
 
      -- Create Books Table
      CREATE TABLE Books (
-         bookId SERIAL PRIMARY KEY,
+         book_Id SERIAL PRIMARY KEY,
          title VARCHAR(255) NOT NULL,
          genre VARCHAR(100),
          publicationDate DATE,
          price DECIMAL(10, 2),
          format VARCHAR(10) CHECK (format IN ('physical', 'ebook', 'audiobook')),
-         authorId INT,
+         author_Id INT,
          publisherId INT,
          averageRating DECIMAL(2, 1),
-         FOREIGN KEY (authorId) REFERENCES Authors(authorId),
+         FOREIGN KEY (author_Id) REFERENCES Authors(author_Id),
          FOREIGN KEY (publisherId) REFERENCES Publishers(publisherId)
      );
 
@@ -123,14 +123,14 @@ Before starting, ensure you have the following installed:
 
      -- Create Reviews Table
      CREATE TABLE Reviews (
-         reviewId SERIAL PRIMARY KEY,
+         review_Id SERIAL PRIMARY KEY,
          customerId INT,
-         bookId INT,
+         book_Id INT,
          rating INT,
          comment TEXT,
          reviewDate DATE,
          FOREIGN KEY (customerId) REFERENCES Customers(customerId),
-         FOREIGN KEY (bookId) REFERENCES Books(bookId)
+         FOREIGN KEY (book_Id) REFERENCES Books(book_Id)
      );
      ```
 
@@ -159,11 +159,11 @@ Before starting, ensure you have the following installed:
    - Books Table:
 
    ```sql
-   -- Assuming authorId and publisherId correspond to the authors and publishers inserted above.
-   INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+   -- Assuming author_Id and publisherId correspond to the authors and publishers inserted above.
+   INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
    VALUES ('The Great Gatsby', 'Fiction', '2000-04-10', 10.99, 'physical', 1, 1, 4.5);
 
-   INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+   INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
    VALUES ('1984', 'Dystopian', '1999-06-08', 15.99, 'ebook', 2, 2, 4.7);
    ```
 
@@ -180,11 +180,11 @@ Before starting, ensure you have the following installed:
    - Reviews Table:
 
    ```sql
-   -- Assuming customerId and bookId correspond to the customers and books inserted above.
-   INSERT INTO Reviews (customerId, bookId, rating, comment, reviewDate)
+   -- Assuming customerId and book_Id correspond to the customers and books inserted above.
+   INSERT INTO Reviews (customerId, book_Id, rating, comment, reviewDate)
    VALUES (1, 1, 5, 'Great book, loved the characters!', '2023-05-01');
 
-   INSERT INTO Reviews (customerId, bookId, rating, comment, reviewDate)
+   INSERT INTO Reviews (customerId, book_Id, rating, comment, reviewDate)
    VALUES (2, 2, 4, 'Interesting and thought-provoking.', '2023-06-15');
    ```
 
@@ -197,39 +197,39 @@ Before starting, ensure you have successfully inserted all the sample data.
 ### Power Writers
 
 ```sql
--- Assuming authorId corresponds to the authors inserted above.
+-- Assuming author_Id corresponds to the authors inserted above.
 -- Insert more books published by these authors in the 'Fiction' genre within the last 5 years.
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('Tinkerbell', 'Fiction', '2020-01-01', 19.99, 'physical', 1, 1, 4.2);
 
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('EndGame', 'Fiction', '2021-05-10', 15.99, 'ebook', 1, 2, 4.5);
 
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('X-Men', 'Fiction', '2024-03-15', 12.99, 'audiobook', 1, 1, 4.0);
 
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('Demon Slayer', 'Fiction', '2021-07-20', 14.99, 'physical', 1, 2, 4.7);
 
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('Solo Leveling', 'Fiction', '2023-11-30', 17.99, 'ebook', 1, 1, 4.3);
 
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('50 Shades of Didi', 'Fiction', '2017-12-05', 10.99, 'audiobook', 2, 2, 4.6);
 
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('Who Did It', 'Fiction', '2018-09-01', 16.99, 'physical', 2, 1, 4.4);
 
 -- SQL query to identify author(s) who have published more than 5 books in the 'Fiction' genre within the last 5 years.
-SELECT authorId, name
+SELECT author_Id, name
 FROM Authors
-WHERE authorId IN (
-    SELECT authorId
+WHERE author_Id IN (
+    SELECT author_Id
     FROM Books
     WHERE genre = 'Fiction'
       AND publicationDate >= CURRENT_DATE - INTERVAL '5 years'
-    GROUP BY authorId
-    HAVING COUNT(bookId) > 5
+    GROUP BY author_Id
+    HAVING COUNT(book_Id) > 5
 );
 ```
 
@@ -244,7 +244,7 @@ WHERE totalSpent > 1500
 ### Well-Reviewed Books
 
 ```sql
-SELECT bookId, title
+SELECT book_Id, title
 FROM Books
 WHERE averageRating > (SELECT AVG(averageRating) FROM Books);
 ```
@@ -262,7 +262,7 @@ LIMIT 1;
 ### 10 Most Recent Posted Reviews
 
 ```sql
-SELECT customerId, bookId, rating, comment, reviewDate
+SELECT customerId, book_Id, rating, comment, reviewDate
 FROM Reviews
 ORDER BY reviewDate DESC
 LIMIT 10;
@@ -278,11 +278,11 @@ LIMIT 10;
 
 ```sql
 -- Insert a new book (This has already been created)
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('The Great Gatsby', 'Fiction', '2000-04-10', 10.99, 'physical', 1, 1, 4.5);
 
 -- Insert another book (This has already been created)
-INSERT INTO Books (title, genre, publicationDate, price, format, authorId, publisherId, averageRating)
+INSERT INTO Books (title, genre, publicationDate, price, format, author_Id, publisherId, averageRating)
 VALUES ('Ade goes to school', 'Dystopian', '2024-06-28', 35.99, 'ebook', 2, 2, 4.7);
 ```
 
@@ -293,10 +293,10 @@ VALUES ('Ade goes to school', 'Dystopian', '2024-06-28', 35.99, 'ebook', 2, 2, 4
 SELECT * FROM Books;
 
 -- Select a book by ID
-SELECT * FROM Books WHERE bookId = 1;
+SELECT * FROM Books WHERE book_Id = 1;
 
 -- Select books by a specific author
-SELECT * FROM Books WHERE authorId = 1;
+SELECT * FROM Books WHERE author_Id = 1;
 
 -- Select books within a specific price range
 SELECT * FROM Books WHERE price BETWEEN 10 AND 20;
@@ -308,12 +308,12 @@ SELECT * FROM Books WHERE price BETWEEN 10 AND 20;
 -- Update a book's price and average rating
 UPDATE Books
 SET price = 12.99, averageRating = 4.6
-WHERE bookId = 1;
+WHERE book_Id = 1;
 
 -- Update a book's genre and format
 UPDATE Books
 SET genre = 'Classic', format = 'audiobook'
-WHERE bookId = 2;
+WHERE book_Id = 2;
 ```
 
 - Delete
@@ -321,7 +321,7 @@ WHERE bookId = 2;
 ```sql
 -- Delete a book
 DELETE FROM Books
-WHERE bookId = 1;
+WHERE book_Id = 1;
 ```
 
 ---
@@ -345,7 +345,7 @@ WHERE bookId = 1;
 SELECT * FROM Authors;
 
 -- Select an author by ID
-SELECT * FROM Authors WHERE authorId = 1;
+SELECT * FROM Authors WHERE author_Id = 1;
 ```
 
 - Update
@@ -354,7 +354,7 @@ SELECT * FROM Authors WHERE authorId = 1;
 -- Update an author
 UPDATE Authors
 SET name = 'Didi Hi' 
-WHERE authorId = 1;
+WHERE author_Id = 1;
 ```
 
 - Delete
@@ -362,7 +362,7 @@ WHERE authorId = 1;
 ```sql
 -- Delete an author
 DELETE FROM Authors
-WHERE authorId = 1;
+WHERE author_Id = 1;
 ```
 
 ---
@@ -448,11 +448,11 @@ WHERE publisherId = 1;
 - Create
 
    ```sql
-   -- Assuming customerId and bookId correspond to the customers and books inserted above.
-   INSERT INTO Reviews (customerId, bookId, rating, comment, reviewDate)
+   -- Assuming customerId and book_Id correspond to the customers and books inserted above.
+   INSERT INTO Reviews (customerId, book_Id, rating, comment, reviewDate)
    VALUES (1, 1, 5, 'Great book, loved the characters!', '2023-05-01');
 
-   INSERT INTO Reviews (customerId, bookId, rating, comment, reviewDate)
+   INSERT INTO Reviews (customerId, book_Id, rating, comment, reviewDate)
    VALUES (2, 2, 4, 'Interesting and thought-provoking.', '2023-06-15');
    ```
 
@@ -468,7 +468,7 @@ SELECT * FROM Reviews;
 ```sql
 UPDATE Reviews
 SET rating = 5.0
-WHERE reviewId = 1;
+WHERE review_Id = 1;
 ```
 
 - Delete
@@ -476,7 +476,7 @@ WHERE reviewId = 1;
 ```sql
 -- Delete a review
 DELETE FROM Reviews
-WHERE reviewId = 1;
+WHERE review_Id = 1;
 ```
 
 ---
@@ -487,13 +487,13 @@ WHERE reviewId = 1;
 
 ```typescript
 interface Book {
-  bookId: number;
+  book_Id: number;
   title: string;
   genre: string;
   publicationDate: Date;
   price: number;
   format: "physical" | "ebook" | "audiobook";
-  authorId: number;
+  author_Id: number;
   publisherId: number;
   averageRating: number;
 }
@@ -505,7 +505,7 @@ interface Book {
 @Entity()
 export class BookEntity implements Book {
   @PrimaryGeneratedColumn()
-  bookId: number;
+  book_Id: number;
 
   @Column()
   @IsNotEmpty()
@@ -532,7 +532,7 @@ export class BookEntity implements Book {
 
   @Column()
   @IsNotEmpty()
-  authorId: number;
+  author_Id: number;
 
   @Column()
   @IsNotEmpty()
@@ -565,8 +565,8 @@ router.get("/", async (req: Request, res: Response) => {
 // Update a book by ID
 router.put("/:id", async (req: Request, res: Response) => {
   const bookRepository = getCustomRepository(BookRepository);
-  const bookId = parseInt(req.params.id, 10);
-  const book = await bookRepository.findOne({ where: { bookId } });
+  const book_Id = parseInt(req.params.id, 10);
+  const book = await bookRepository.findOne({ where: { book_Id } });
   if (!book) {
     return res.status(404).json({ message: "Book not found" });
   }
@@ -578,8 +578,8 @@ router.put("/:id", async (req: Request, res: Response) => {
 // Delete a book by ID
 router.delete("/:id", async (req: Request, res: Response) => {
   const bookRepository = getCustomRepository(BookRepository);
-  const bookId = parseInt(req.params.id, 10);
-  const book = await bookRepository.findOne({ where: { bookId } });
+  const book_Id = parseInt(req.params.id, 10);
+  const book = await bookRepository.findOne({ where: { book_Id } });
   if (!book) {
     return res.status(404).json({ message: "Book not found" });
   }
